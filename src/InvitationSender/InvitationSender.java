@@ -3,6 +3,8 @@ package InvitationSender;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * InvitationSender.java -  Sends invitation to customers
@@ -15,18 +17,13 @@ public class InvitationSender {
 
         ICustomerReader customerReader = new JsonCustomerReader();
         List<Customer> customerList = null;
-        try {
-            customerList = customerReader.getAllCustomers("customers.txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        /*  The coordinates of the Office and the radius are passed to the DistanceCustomerFilter
-            in order to filter out customers outside the specified radius of the office.
+        customerList = customerReader.getAllCustomers("customers.txt");
+        /*  The list is filtered by using a lambda expression
         */
-        ICustomerFilter distanceFilter = new DistanceCustomerFilter(53.3381985,-6.2592576,100);
-        customerList = distanceFilter.filter(customerList);
-        /*  Sorting customers according to UserIDs */
-        Collections.sort(customerList, new CustomerIDComparator());
+        customerList = customerList.stream()
+                .filter(e -> (e.calculateDistanceFrom(53.3381985, -6.2592576) < 100))
+                .sorted(new CustomerIDComparator())
+                .collect(Collectors.toList());
 
         /*  Invite each customer */
         for(Customer customer : customerList) {

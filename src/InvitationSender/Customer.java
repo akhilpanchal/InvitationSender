@@ -11,16 +11,6 @@ public class Customer {
     private double latitude;
     private double longitude;
 
-    public double getDistanceFromOrigin() {
-        return distanceFromOrigin;
-    }
-
-    public void setDistanceFromOrigin(double distanceFromOrigin) {
-        this.distanceFromOrigin = distanceFromOrigin;
-    }
-
-    private double distanceFromOrigin;
-
     public double getLongitude() {
         return longitude;
     }
@@ -58,10 +48,23 @@ public class Customer {
         StringBuilder customer = new StringBuilder();
         customer.append("UserID: ").append(userId).append('\t');
         customer.append("Name: ").append(name);
-        /*customer.append(latitude).append('\t');
-        customer.append(longitude).append('\t');
-        customer.append(distanceFromOrigin);*/
         return customer.toString();
+    }
+
+    /*  Caluclates distance of the customer from the given coordinates*/
+    public double calculateDistanceFrom(double originLatitude, double originLongitude) {
+        double distanceFromOrigin = 0;
+        double customerLatitudeRadians = Math.toRadians(this.latitude);
+        double originLatitudeRadians = Math.toRadians(originLatitude);
+        double delLongitude = Math.toRadians(Math.abs(originLongitude - this.longitude));
+
+        double centralAngle = Math.acos(
+                (Math.sin(originLatitudeRadians) * Math.sin(customerLatitudeRadians))
+                        +       (Math.cos(originLatitudeRadians) * Math.cos(customerLatitudeRadians) * Math.cos(delLongitude))
+        );
+
+        distanceFromOrigin = Double.valueOf(6371) * centralAngle;
+        return distanceFromOrigin;
     }
 }
 

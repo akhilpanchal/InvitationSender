@@ -3,10 +3,7 @@ package InvitationSender;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,17 +15,19 @@ import java.util.List;
 public class JsonCustomerReader implements ICustomerReader{
 
     /*  Returns a list of Customer instances read from the JSON File */
-    public List<Customer> getAllCustomers(String filePath) throws IOException {
-        FileReader reader = new FileReader(filePath);
-        JSONParser parser = new JSONParser();
+    public List<Customer> getAllCustomers(String filePath) {
         List<Customer> customers = new ArrayList<Customer>();
-        File jsonFile = new File(filePath);
-        List<String> recordStrings = getRecords(jsonFile);
         try {
-            for (String recordString : recordStrings) {
-                Object jsonObject = parser.parse(recordString);
-                Customer customer = createCustomerFromJson((JSONObject)jsonObject);
-                customers.add(customer);
+            FileInputStream fileStream = new FileInputStream(filePath);
+            BufferedReader fileReader = new BufferedReader(new InputStreamReader(fileStream));
+            String recordString;
+            JSONParser parser = new JSONParser();
+
+            while((recordString = fileReader.readLine()) != null) {
+                JSONObject jsonObject = (JSONObject)parser.parse(recordString);
+                customers.add(
+                        createCustomerFromJson(jsonObject)
+                );
             }
         } catch(Exception e) {
             System.out.println(e);
@@ -51,19 +50,6 @@ public class JsonCustomerReader implements ICustomerReader{
             System.out.println(pe);
         }
         return customer;
-    }
-
-    /*  Returns JSON record strings from the JSON File */
-    private List<String> getRecords(File fin) throws IOException {
-        List<String> recordStrings= new ArrayList<String>();
-        BufferedReader br = new BufferedReader(new FileReader(fin));
-        String line = null;
-        while ((line = br.readLine()) != null) {
-            // System.out.println(line);
-            recordStrings.add(line);
-        }
-        br.close();
-        return recordStrings;
     }
 }
 

@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface ICustomerReader {
 
-    public List<Customer> getAllCustomers(String filePath) throws IOException;
+    public List<Customer> getAllCustomers(String filePath);
 }
