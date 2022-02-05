@@ -1,8 +1,3 @@
-Designed and Implemented by:
-Akhil Panchal
-ahpancha@syr.edu
-408-921-0731
-
 # Invitation Sender:
 
 A simple command line tool that accepts a JSON records file consisting of the following information:
@@ -19,3 +14,9 @@ sends them an invitation for the event.
 JSON in Java [package org.json]
 Douglas Crockford
 douglas@crockford.com
+
+
+## Designed and Implemented by:
+Akhil Panchal
+ahpancha@syr.edu
+408-921-0731
